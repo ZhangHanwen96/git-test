@@ -15,10 +15,10 @@ if [ -z "${1}" ]; then
   echo "Name of new branch?"
   read branch
 
-  br = "upgrade/${branch}"
+  br="upgrade/${branch}"
 
   git checkout -b $br
-  yarn install @aftership/uikit-admin-polaris-extends@latest
+  yarn add @aftership/uikit-admin-polaris-extends@latest
   git add . && git commit -m 'upgrade-polaris-sdk' && git push origin $br
 
   gh pr create --head $br --base master --fill
