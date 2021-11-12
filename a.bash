@@ -15,7 +15,7 @@ if [ -z "${1}" ]; then
   echo "Name of new branch?"
   read branch
 
-  br = "upgrade/$branch"
+  br = "upgrade/${branch}"
 
   git checkout -b $br
   yarn install @aftership/uikit-admin-polaris-extends@latest
