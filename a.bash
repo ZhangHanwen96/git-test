@@ -17,7 +17,7 @@ if [ -z "${1}" ]; then
 
   br="upgrade/${branch}"
 
-  if git show-ref --quiet refs/heads/upgrade/$br; then
+  if git show-ref --quiet refs/heads/$br; then
     echo "!!Branch named ~${br}~ already exists, are you sure to delete?"
     read -p "Yes(y) or No(n) ?" yn
     [$yn == "y"] &&  git branch -d $br
