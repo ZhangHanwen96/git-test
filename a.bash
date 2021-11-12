@@ -10,34 +10,61 @@
 # gh pr create --head test2 --base master --fill
 
 # git fetch upstream
+declare -i count
+
+workdir="/Users/hw.zhang/my-web-projects"
+project_arr=(git-test)
+
+count=0
+for proj in ${project_arr[@]}
+do
+    project_arr[$count]="${workdir}/${proj}"
+    count=count+1
+done
+
+
 
 if [ -z "${1}" ]; then
-  echo "Name of new branch?"
-  read branch
+    echo "Name of new branch?"
+    read branch
 
-  br="upgrade/${branch}"
 
-  if git show-ref --quiet refs/heads/$br; then
-    echo "!!Branch named ~${br}~ already exists, are you sure to delete?"
-    read -p "Yes(y) or No(n) ?" yn
-    [$yn == "y"] &&  git branch -d $br
-    if [$yn == "n"]; then
-        echo "Enter another name for new branch: $"
-        read rBranch
 
-        br="upgrade/${rBranch}"
-    fi
-  fi
+    br="upgrade/${branch}"
 
-  
+    
+ 
 
-  git checkout -b $br
-  yarn add @aftership/uikit-admin-polaris-extends@latest
-  git add . && git commit -m 'upgrade-polaris-sdk' && git push -f origin $br
+    for projPath in ${project_arr[@]};
+    do
 
-  gh pr create --head $br --base master --fill
+        cd ${projPath}
 
-  else
-    echo "?"
+        if git show-ref --quiet refs/heads/$br; then
+            echo "!!Branch named ~${br}~ already exists, are you sure to delete? $ "
+            read -p "Yes(y) or No(n) ? : $" yn
+            # delete both local and remote branch
+            [$yn == "y"] &&  git branch -d $br && git push --delete origin $br
+            if [$yn == "n"]; then
+                echo "Enter another name for new branch: $ "
+                read rBranch
+
+                br="upgrade/${rBranch}"
+            fi
+        fi
+
+        git checkout -b $br
+        yarn add @aftership/uikit-admin-polaris-extends@latest
+        git add . && git commit -m 'upgrade-polaris-sdk' && git push -f origin $br
+
+        # create pr
+        gh pr create --head $br --base master --fill
+
+       
+
+    done
+
+    else
+        echo "?"
 fi
 
